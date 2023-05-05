@@ -1,0 +1,61 @@
+import os
+import csv
+
+
+file = os.path.join('election_data_.csv')
+#declaring my dictionary to store votes and candidates
+election = {}
+#setting variable to 0 to begin count
+total_votes = 0
+# Open and read csv
+with open(r"\Users\stcar\Desktop\Bootcamp\Weekly Challenges\Python_challenge\Starter_Code\PyPoll\Resources\election_data.csv") as csvfile:
+    csv_reader = csv.reader(csvfile, delimiter=",")
+    next(csv_reader,None)
+
+    for row in csv_reader:
+        total_votes += 1
+        if row[2] in election.keys():
+            election[row[2]] = election[row[2]] + 1 
+        else:
+            election[row[2]] = 1
+#creating empty lists to store values
+candidates = []
+num_votes = []
+
+#putting values in my lists
+for key, value, in election.items():
+    candidates.append(key)
+    num_votes.append(value)
+#creating a list to store vote %
+percent_vote = []
+for n in num_votes:
+    percent_vote.append(round(n/total_votes*100, 3))
+
+#combining my current lists to a clean set
+cleaned = list(zip(candidates, num_votes, percent_vote))
+#another list to store the winners
+winners = []
+
+for name in cleaned:
+    if max (num_votes) == name[1]:
+        winners.append(name[0])
+#printing results to text file 
+output_file = os.path.join('results.txt')
+
+with open(output_file, 'w') as txtfile:
+    txtfile.writelines('Election Results \n------------------------- \nTotal Votes: ' + str(total_votes) + 
+      '\n-------------------------\n')
+    for entry in cleaned:
+        txtfile.writelines(entry[0] + ": " + str(entry[2]) +'%  (' + str(entry[1]) + ')\n')
+    txtfile.writelines('------------------------- \nWinners: ' + ''.join(winners) + '\n-------------------------')
+with open(output_file, 'r') as readfile:
+    print(readfile.read())
+
+
+# Your task is to create a Python script that analyzes the votes and calculates each of the following values:
+#The total number of votes cast
+#A complete list of candidates who received votes
+#The percentage of votes each candidate won
+#The total number of votes each candidate won
+#The winner of the election based on popular vote
+# Your analysis should align with the following results
